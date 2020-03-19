@@ -238,51 +238,60 @@ INPUTLANGUAGE=sys.argv[1]
 OUTPUTLANGUAGE=sys.argv[2]
 INFILE=sys.argv[3]
 
-# create outfile name by appending the language code to the infile name
-name, ext=os.path.splitext(INFILE)
-OUTFILE= "{name}_{OUTPUTLANGUAGE}{ext}".format(name=name,OUTPUTLANGUAGE=OUTPUTLANGUAGE,ext=ext)
+if OUTPUTLANGUAGE == "all":
+    LANGS = ["af","ak","sq","am","ar","hy","az","eu","be","bem","bn","bh","bs","br","bg","km","ca","chr","ny","co","hr","cs","da","nl","en","eo","et","ee","fo","tl","fi","fr","fy","gaa","gl","ka","de","el","gn","gu","ht","ha","haw","iw","hi","hu","is","ig","id","ia","ga","it","ja","jw","kn","kk","rw","rn","kg","ko","kri","ku","ckb","ky","lo","la","lv","ln","lt","loz","lg","ach","mk","mg","ms","ml","mt","mi","mr","mfe","mo","mn","sr-ME","ne","pcm","nso","no","nn","oc","or","om","ps","fa","pl","pt-BR","pt-PT","pa","qu","ro","rm","nyn","ru","gd","sr","sh","st","tn","crs","sn","sd","si","sk","sl","so","es","su","sw","sv","tg","ta","tt","te","th","ti","to","lua","tum","tr","tk","tw","ug","uk","ur","uz","vi","cy","wo","xh","yi","yo","zu"]
+    LANGS = ["te","th","ti","to","lua","tum","tr","tk","tw","ug","uk","ur","uz","vi","cy","wo","xh","yi","yo","zu"]
+else:
+    LANGS = [OUTPUTLANGUAGE]
 
-# read xml structure
-tree = ET.parse(INFILE)
-root = tree.getroot()
+for LANG in LANGS:
+    # create outfile directory and name by appending the language code to the infile name
+    name, ext=os.path.splitext(INFILE)
+    # OUTFILE= "{name}_{LANG}{ext}".format(name=name,LANG=LANG,ext=ext)
+    os.mkdir("values-{LANG}".format(LANG=LANG))
+    OUTFILE= "values-{LANG}/{name}{ext}".format(LANG=LANG,name=name,ext=ext)
 
-# cycle through elements 
-for i in range(len(root)):
-#	for each translatable string call the translation subroutine
-#   and replace the string by its translation,
-#   descend into each string array  
-    isTranslatable=root[i].get('translatable')
-    print((str(i)+" ========================="))
-    if(isTranslatable=='false'):
-        print("Not translatable")
-    if(root[i].tag=='string') & (isTranslatable!='false'):
-# Here you might want to replace root[i].text by the findall_content function
-# if you need to extract html tags
-        # ~ totranslate="".join(findall_content(str(ET.tostring(root[i])),"string"))
-        totranslate=root[i].text
-        if(totranslate!=None):
-            print(totranslate+"-->", end='')
-            root[i].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
-            print(root[i].text)
-    if(root[i].tag=='string-array'):
-        print("Entering string array...")
-        for j in range(len(root[i])):
-#	for each translatable string call the translation subroutine
-#   and replace the string by its translation,
-            isTranslatable=root[i][j].get('translatable')
-            print((str(i)+" " + str(j) + " ========================="))
-            if(isTranslatable=='false'):
-                print("Not translatable")
-            if(root[i][j].tag=='item') & (isTranslatable!='false'):
-# Here you might want to replace root[i].text by the findall_content function
-# if you need to extract html tags
-                # ~ totranslate="".join(findall_content(str(ET.tostring(root[i][j])),"item"))
-                totranslate=root[i][j].text
-                if(totranslate!=None):
-                    print(totranslate+"-->", end='')
-                    root[i][j].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
-                    print(root[i][j].text)
+    # read xml structure
+    tree = ET.parse(INFILE)
+    root = tree.getroot()
 
-# write new xml file
-tree.write(OUTFILE, encoding='utf-8')
+    # cycle through elements 
+    for i in range(len(root)):
+    #	for each translatable string call the translation subroutine
+    #   and replace the string by its translation,
+    #   descend into each string array  
+        isTranslatable=root[i].get('translatable')
+        print((str(i)+" ========================="))
+        if(isTranslatable=='false'):
+            print("Not translatable")
+        if(root[i].tag=='string') & (isTranslatable!='false'):
+    # Here you might want to replace root[i].text by the findall_content function
+    # if you need to extract html tags
+            # ~ totranslate="".join(findall_content(str(ET.tostring(root[i])),"string"))
+            totranslate=root[i].text
+            if(totranslate!=None):
+                print(totranslate+"-->", end='')
+                root[i].text=translate(totranslate,LANG,INPUTLANGUAGE)
+                print(root[i].text)
+        if(root[i].tag=='string-array'):
+            print("Entering string array...")
+            for j in range(len(root[i])):
+    #	for each translatable string call the translation subroutine
+    #   and replace the string by its translation,
+                isTranslatable=root[i][j].get('translatable')
+                print((str(i)+" " + str(j) + " ========================="))
+                if(isTranslatable=='false'):
+                    print("Not translatable")
+                if(root[i][j].tag=='item') & (isTranslatable!='false'):
+    # Here you might want to replace root[i].text by the findall_content function
+    # if you need to extract html tags
+                    # ~ totranslate="".join(findall_content(str(ET.tostring(root[i][j])),"item"))
+                    totranslate=root[i][j].text
+                    if(totranslate!=None):
+                        print(totranslate+"-->", end='')
+                        root[i][j].text=translate(totranslate,LANG,INPUTLANGUAGE)
+                        print(root[i][j].text)
+
+    # write new xml file
+    tree.write(OUTFILE, encoding='utf-8')
 
