@@ -1,0 +1,6 @@
+Regex used for identifying formatted strings with invalid formatting
+getString\(.*,.*\)
+
+Regex to identify languages with invalid formatted strings
+<string name="auto_start_alert_dialog_title">((?!%s).)*</string>
+<string name="(count_files|message_run_in_bg)">((?!%s).)*</string>
