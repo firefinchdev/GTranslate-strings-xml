@@ -253,6 +253,18 @@ if OUTPUTLANGUAGE == "all":
     "st","tn","crs","sn","sd","si","sk","sl","so","es","su","sw","sv","tg","ta",
     "tt","te","th","ti","to","lua","tum","tr","tk","tw","ug","uk","ur","uz","vi",
     "cy","wo","xh","yi","yo","zu"]
+elif OUTPUTLANGUAGE == "app":
+	LANGS = ["af","am","ar",
+	#"as",
+	"az","be","bg","bn","bs","ca","cs","da","de","el","es","et","eu","fa","fi","fr",
+	#"fr-rCA",
+	"gl","gu","hi","hr","hu","hy",
+	#"in",
+	"is","it","iw","ja","ka","kk","km","kn","ko","ky","lo","lt","lv","mk","ml","mn","mr","ms",
+	#"my","nb",
+	"ne","nl","or","pa","pl","pt","pt-BR","pt-PT","ro","ru","si","sk","sl","sq","sr","sv","sw","ta","te","th","tl","tr","uk","ur","uz","vi",
+	#"zh-rCN","zh-rHK","zh-rTW",
+	"zu"]
 else:
     LANGS = [OUTPUTLANGUAGE]
 
